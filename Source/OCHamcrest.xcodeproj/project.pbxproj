@@ -692,9 +692,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		0F030C551235D0BD00C59F75 /* libochamcrest */ = {
+		0F030C551235D0BD00C59F75 /* StaticLibrary */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0F030C591235D0ED00C59F75 /* Build configuration list for PBXNativeTarget "libochamcrest" */;
+			buildConfigurationList = 0F030C591235D0ED00C59F75 /* Build configuration list for PBXNativeTarget "StaticLibrary" */;
 			buildPhases = (
 				0F030C531235D0BD00C59F75 /* Sources */,
 				089B9C751298B72A00D4F34F /* Frameworks */,
@@ -703,7 +703,7 @@
 			);
 			dependencies = (
 			);
-			name = libochamcrest;
+			name = StaticLibrary;
 			productName = ochamcrest;
 			productReference = 0F030C561235D0BD00C59F75 /* libochamcrest.a */;
 			productType = "com.apple.product-type.library.static";
@@ -783,7 +783,7 @@
 			targets = (
 				8DC2EF4F0486A6940098B216 /* OCHamcrest */,
 				32604E86123601CC0084AB0B /* OCHamcrestIOS */,
-				0F030C551235D0BD00C59F75 /* libochamcrest */,
+				0F030C551235D0BD00C59F75 /* StaticLibrary */,
 				0F2A4B1E0D8B68B400051BCF /* UnitTests */,
 				08EEF60F129E0B1B0076BFCC /* Documentation */,
 				08B51B4112A073DD00147210 /* Distribution */,
@@ -854,7 +854,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We'll copy the OS X framework to a new location, then modify it in place.\nOSX_FRAMEWORK=\"${BUILT_PRODUCTS_DIR}/OCHamcrest.framework/\"\nIOS_FRAMEWORK=\"${BUILT_PRODUCTS_DIR}/OCHamcrestIOS.framework/\"\n\n# Trigger builds of the static library for both the simulator and the device.\nxcodebuild -configuration Release -target libochamcrest -sdk iphoneos > /dev/null\nOUT=$?\nif [ \"${OUT}\" -ne \"0\" ]; then\n\techo Device build failed\n\texit ${OUT}\nfi\nxcodebuild -configuration Release -target libochamcrest -sdk iphonesimulator > /dev/null\nOUT=$?\nif [ \"${OUT}\" -ne \"0\" ]; then\n\techo Simulator build failed\n\texit ${OUT}\nfi\n\n# Copy the OS X framework to the new location.\nmkdir -p \"${IOS_FRAMEWORK}\"\nrsync -q -a --delete \"${OSX_FRAMEWORK}\" \"${IOS_FRAMEWORK}\"\n\n# Rename the main header.\nmv \"${IOS_FRAMEWORK}/Headers/OCHamcrest.h\" \"${IOS_FRAMEWORK}/Headers/OCHamcrestIOS.h\"\n\n# Update all imports to use the new framework name.\nIMPORT_EXPRESSION=\"s/#import <OCHamcrest/#import <OCHamcrestIOS/g;\"\nfind \"${IOS_FRAMEWORK}\" -name '*.h' -print0 | xargs -0 perl -pi -e \"${IMPORT_EXPRESSION}\"\n\n# Delete the existing (OS X) library and the link to it.\nrm \"${IOS_FRAMEWORK}/OCHamcrest\" \"${IOS_FRAMEWORK}/Versions/Current/OCHamcrest\"\n\n# Create a new library that is a fat library containing both static libraries.\nDEVICE_LIB=\"${PROJECT_DIR}/build/Release-iphoneos/libochamcrest.a\"\nSIMULATOR_LIB=\"${PROJECT_DIR}/build/Release-iphonesimulator/libochamcrest.a\"\nOUTPUT_LIB=\"${IOS_FRAMEWORK}/Versions/Current/OCHamcrestIOS\"\n\nlipo -create \"${DEVICE_LIB}\" -arch i386 \"${SIMULATOR_LIB}\" -o \"${OUTPUT_LIB}\"\n\n# Add a symlink, as required by the framework.\nln -s Versions/Current/OCHamcrestIOS \"${IOS_FRAMEWORK}/OCHamcrestIOS\"\n\n# Update the name in the plist file.\nNAME_EXPRESSION=\"s/OCHamcrest/OCHamcrestIOS/g;\"\nperl -pi -e \"${NAME_EXPRESSION}\" \"${IOS_FRAMEWORK}/Resources/Info.plist\"\n";
+			shellScript = "# We'll copy the OS X framework to a new location, then modify it in place.\nOSX_FRAMEWORK=\"${BUILT_PRODUCTS_DIR}/OCHamcrest.framework/\"\nIOS_FRAMEWORK=\"${BUILT_PRODUCTS_DIR}/OCHamcrestIOS.framework/\"\n\n# Trigger builds of the static library for both the simulator and the device.\nxcodebuild -configuration Release -target StaticLibrary -sdk iphoneos > /dev/null\nOUT=$?\nif [ \"${OUT}\" -ne \"0\" ]; then\n\techo Device build failed\n\texit ${OUT}\nfi\nxcodebuild -configuration Release -target StaticLibrary -sdk iphonesimulator > /dev/null\nOUT=$?\nif [ \"${OUT}\" -ne \"0\" ]; then\n\techo Simulator build failed\n\texit ${OUT}\nfi\n\n# Copy the OS X framework to the new location.\nmkdir -p \"${IOS_FRAMEWORK}\"\nrsync -q -a --delete \"${OSX_FRAMEWORK}\" \"${IOS_FRAMEWORK}\"\n\n# Rename the main header.\nmv \"${IOS_FRAMEWORK}/Headers/OCHamcrest.h\" \"${IOS_FRAMEWORK}/Headers/OCHamcrestIOS.h\"\n\n# Update all imports to use the new framework name.\nIMPORT_EXPRESSION=\"s/#import <OCHamcrest/#import <OCHamcrestIOS/g;\"\nfind \"${IOS_FRAMEWORK}\" -name '*.h' -print0 | xargs -0 perl -pi -e \"${IMPORT_EXPRESSION}\"\n\n# Delete the existing (OS X) library and the link to it.\nrm \"${IOS_FRAMEWORK}/OCHamcrest\" \"${IOS_FRAMEWORK}/Versions/Current/OCHamcrest\"\n\n# Create a new library that is a fat library containing both static libraries.\nDEVICE_LIB=\"${PROJECT_DIR}/build/Release-iphoneos/libochamcrest.a\"\nSIMULATOR_LIB=\"${PROJECT_DIR}/build/Release-iphonesimulator/libochamcrest.a\"\nOUTPUT_LIB=\"${IOS_FRAMEWORK}/Versions/Current/OCHamcrestIOS\"\n\nlipo -create \"${DEVICE_LIB}\" -arch i386 \"${SIMULATOR_LIB}\" -o \"${OUTPUT_LIB}\"\n\n# Add a symlink, as required by the framework.\nln -s Versions/Current/OCHamcrestIOS \"${IOS_FRAMEWORK}/OCHamcrestIOS\"\n\n# Update the name in the plist file.\nNAME_EXPRESSION=\"s/OCHamcrest/OCHamcrestIOS/g;\"\nperl -pi -e \"${NAME_EXPRESSION}\" \"${IOS_FRAMEWORK}/Resources/Info.plist\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1276,7 +1276,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0F030C591235D0ED00C59F75 /* Build configuration list for PBXNativeTarget "libochamcrest" */ = {
+		0F030C591235D0ED00C59F75 /* Build configuration list for PBXNativeTarget "StaticLibrary" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0F030C571235D0BD00C59F75 /* Debug */,
