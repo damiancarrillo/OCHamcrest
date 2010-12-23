@@ -3,6 +3,7 @@
 * iOS: Fixed crash that occurred when trying to describe the matchers allOf, anyOf and isIn. Related to -ObjC linker flag.
 * Changed documentation from HTML to Xcode documentation set. Run "make install" from the Documentation folder to install.
 * Changed convenience methods to invoke superclass and return id, to support possibility of subclassing matchers.
+* Changed OCHamcrestIOS target type to "aggregate" to support cross-project references because Xcode refuses to recognize "framework" targets as dependencies in iOS targets.
 
 
 == Version 1.0 ==
